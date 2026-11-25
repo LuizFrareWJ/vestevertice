@@ -240,6 +240,19 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Estilo",
+        "valueType": "string",
+        "description": "Compacto: hero mais baixo, para a oferta aparecer na primeira tela do celular.",
+        "options": [
+          {
+            "name": "Compacto",
+            "value": "compact"
+          }
+        ]
       }
     ]
   },
@@ -250,28 +263,28 @@
         "component": "richtext",
         "name": "text",
         "value": "",
-        "label": "Text",
+        "label": "Chamada e condições",
         "valueType": "string",
         "required": true,
-        "description": "Optional short line before the heading becomes the eyebrow. Heading is the offer, paragraphs below are the conditions."
+        "description": "Linha curta antes do título vira a etiqueta. O título é a oferta; os parágrafos abaixo são as condições."
       },
       {
         "component": "text",
         "valueType": "string",
         "name": "coupon",
-        "label": "Coupon code",
-        "description": "Shown with a copy button. Leave empty to hide."
+        "label": "Código do cupom",
+        "description": "Aparece com o botão Copiar. Deixe vazio para esconder."
       },
       {
         "component": "aem-content",
         "name": "link",
-        "label": "Call to action link"
+        "label": "Destino do botão"
       },
       {
         "component": "text",
         "valueType": "string",
         "name": "linkText",
-        "label": "Call to action text"
+        "label": "Texto do botão"
       }
     ]
   }

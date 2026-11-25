@@ -5,10 +5,11 @@ main .offer {
 
 main .offer .offer-inner {
   display: grid;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
   max-width: var(--max-content-width);
   margin: 0 auto;
-  padding: 32px var(--inline-section-padding);
+  padding: 24px var(--inline-section-padding) 28px;
 }
 
 main .offer .offer-coupon-code p,
@@ -25,27 +26,27 @@ main .offer .offer-content > :last-child {
 }
 
 main .offer .offer-eyebrow {
-  margin: 0 0 12px;
-  color: var(--accent-color);
+  margin: 0 0 8px;
+  color: rgb(245 242 237 / 70%);
   font-size: var(--body-font-size-xs);
-  font-weight: 700;
-  font-stretch: var(--heading-font-stretch);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 main .offer h1,
 main .offer h2,
 main .offer h3 {
   margin: 0;
-  font-size: var(--heading-font-size-xl);
-  text-transform: uppercase;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.05;
 }
 
 main .offer .offer-content p:not(.offer-eyebrow) {
   max-width: 52ch;
+  margin-top: 8px;
   color: rgb(245 242 237 / 80%);
   font-size: var(--body-font-size-s);
+  line-height: 1.45;
 }
 
 main .offer .offer-content strong {
@@ -54,62 +55,70 @@ main .offer .offer-content strong {
 
 main .offer .offer-actions {
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
 }
 
 main .offer .offer-coupon {
-  position: relative;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 4px 12px;
   min-height: 48px;
-  border: 2px dashed var(--accent-color);
-  padding: 4px 4px 4px 16px;
+  border: 1px dashed rgb(245 242 237 / 45%);
+  padding: 4px 4px 4px 14px;
 }
 
 main .offer .offer-coupon-label {
   color: rgb(245 242 237 / 70%);
-  font-size: var(--body-font-size-xxs);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: var(--body-font-size-xs);
 }
 
 main .offer .offer-coupon-code {
   flex: 1 1 auto;
-  color: var(--accent-color);
-  font-size: var(--heading-font-size-s);
+  min-width: 0;
+  color: var(--on-ink-color);
+  font-size: var(--heading-font-size-xs);
   font-weight: 800;
-  font-stretch: 125%;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
   user-select: all;
 }
 
 main .offer .offer-coupon-copy {
-  min-width: 96px;
+  flex: 0 0 auto;
   min-height: 40px;
-  border: 0;
-  padding: 0 16px;
-  background-color: var(--on-ink-color);
-  color: var(--ink-color);
+  border: 1px solid rgb(245 242 237 / 45%);
+  padding: 0 14px;
+  background-color: transparent;
+  color: var(--on-ink-color);
   font-size: var(--body-font-size-xs);
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
 main .offer .offer-coupon-copy:hover {
-  background-color: var(--accent-color);
+  border-color: var(--on-ink-color);
+  background-color: var(--on-ink-color);
+  color: var(--ink-color);
 }
 
 main .offer .offer-coupon-status {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.4;
+}
+
+main .offer .offer-coupon-status:empty {
+  display: none;
+}
+
+main .offer .offer-coupon-status[data-state="success"] {
+  color: var(--accent-color);
+}
+
+main .offer .offer-coupon-status[data-state="error"] {
+  color: var(--on-ink-color);
 }
 
 main .offer .offer-cta a.button {
@@ -118,10 +127,10 @@ main .offer .offer-cta a.button {
 
 @media (width >= 900px) {
   main .offer .offer-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
     align-items: center;
     gap: 48px;
-    padding-block: 48px;
+    padding-block: 36px;
   }
 }
 
