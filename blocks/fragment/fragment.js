@@ -22,7 +22,9 @@ export async function loadFragment(path) {
   if (path && path.startsWith('/') && !path.startsWith('//')) {
     // eslint-disable-next-line no-param-reassign
     path = path.replace(/(\.plain)?\.html/, '');
-    const resp = await fetch(`${path}.plain.html`);
+    // revalidate on every load: aem.live lets browsers keep HTML for hours,
+    // and a published fragment must show up as soon as the page is refreshed
+    const resp = await fetch(`${path}.plain.html`, { cache: 'no-cache' });
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
