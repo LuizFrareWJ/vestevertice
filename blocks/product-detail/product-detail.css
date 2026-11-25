@@ -125,11 +125,12 @@ main .product-detail .product-detail-description > :first-child {
   margin-top: 0;
 }
 
-@media (width >= 900px) {
+/* tablet and split screens: photo beside the name and price */
+@media (width >= 600px) {
   main .product-detail {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
-    gap: 56px;
+    gap: 24px;
   }
 
   /* keep photo and thumbnails within the first screen */
@@ -137,6 +138,21 @@ main .product-detail .product-detail-description > :first-child {
     width: 100%;
     max-width: calc((100vh - var(--nav-height) - 180px) * 0.8);
     justify-self: end;
+  }
+
+  main .product-detail h1 {
+    font-size: var(--heading-font-size-l);
+  }
+}
+
+@media (width >= 900px) {
+  main .product-detail {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 56px;
+  }
+
+  main .product-detail h1 {
+    font-size: var(--heading-font-size-xl);
   }
 
   main .product-detail .product-detail-thumb {

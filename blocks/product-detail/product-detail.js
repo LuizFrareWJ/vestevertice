@@ -1,18 +1,9 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { formatCents, resolvePrices } from './pricing.js';
-
-const NUMBER = /^\d+(?:[.,]\d+)*$/;
+import { buildPrice, findPriceCell } from './price-cell.js';
 
 function text(element) {
   return element?.textContent.trim() || '';
-}
-
-function srOnly(value) {
-  const span = document.createElement('span');
-  span.className = 'product-detail-sr-only';
-  span.textContent = value;
-  return span;
 }
 
 /**
@@ -25,29 +16,19 @@ function readContent(block) {
   const pictures = [...block.querySelectorAll('picture')];
   const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
   const summary = heading?.closest('div');
-
-  const priceCell = cells.find((cell) => cell !== summary
-    && [...cell.querySelectorAll(':scope > p')].some((p) => NUMBER.test(text(p))));
-  const priceParagraphs = priceCell ? [...priceCell.querySelectorAll(':scope > p')] : [];
-  const numbers = priceParagraphs.filter((p) => NUMBER.test(text(p)));
-  const condition = priceParagraphs.find((p) => !numbers.includes(p));
+  // All four groups delivered: the model order (media, summary, price, text) identifies them.
+  const complete = cells.length === 4 && cells[1] === summary;
+  const priceCell = complete ? cells[2] : findPriceCell(cells, summary);
 
   const summaryParagraphs = summary ? [...summary.querySelectorAll(':scope > p')] : [];
   const back = summaryParagraphs.map((p) => p.querySelector('a')).find(Boolean);
   const color = summaryParagraphs.find((p) => !p.querySelector('a'));
 
-  const description = cells.find((cell) => cell !== summary && cell !== priceCell
-    && !cell.querySelector('picture') && text(cell));
+  const description = complete ? cells[3] : cells.find((cell) => cell !== summary
+    && cell !== priceCell && !cell.querySelector('picture') && text(cell));
 
   return {
-    pictures,
-    heading,
-    color,
-    back,
-    base: numbers[0],
-    promo: numbers[1],
-    condition,
-    description,
+    pictures, heading, color, back, priceCell, description,
   };
 }
 
@@ -123,55 +104,6 @@ function buildGallery(pictures) {
 }
 
 /**
- * Renders the price block. Missing prices render nothing instead of zero.
- */
-function buildPrice({ base, promo, condition }) {
-  const prices = resolvePrices(text(base), text(promo));
-  if (prices.price === null) return null;
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'product-detail-price';
-
-  const current = document.createElement('p');
-  current.className = 'product-detail-price-current';
-  const amount = document.createElement('strong');
-  wrapper.append(current);
-
-  if (prices.promo === null) {
-    amount.textContent = formatCents(prices.price);
-    if (base) moveInstrumentation(base, amount);
-    current.append(amount);
-    return wrapper;
-  }
-
-  amount.textContent = formatCents(prices.promo);
-  if (promo) moveInstrumentation(promo, amount);
-  current.append(srOnly(`De ${formatCents(prices.price)} por `), amount);
-  if (text(condition)) {
-    const label = document.createElement('span');
-    label.className = 'product-detail-price-condition';
-    label.textContent = ` ${text(condition)}`;
-    moveInstrumentation(condition, label);
-    current.append(label);
-  }
-
-  const original = document.createElement('p');
-  original.className = 'product-detail-price-original';
-  original.setAttribute('aria-hidden', 'true');
-  const del = document.createElement('del');
-  del.textContent = formatCents(prices.price);
-  if (base) moveInstrumentation(base, del);
-  original.append('Sem o cupom ', del);
-
-  const savings = document.createElement('p');
-  savings.className = 'product-detail-price-savings';
-  savings.textContent = `Economia de ${formatCents(prices.savings)}`;
-
-  wrapper.append(original, savings);
-  return wrapper;
-}
-
-/**
  * loads and decorates the product detail block
  * @param {Element} block The block element
  */
@@ -197,10 +129,10 @@ export default function decorate(block) {
     info.append(content.color);
   }
 
-  const price = buildPrice(content);
+  const price = buildPrice(content.priceCell, { moveInstrumentation });
   if (price) info.append(price);
 
-  if (content.description) {
+  if (text(content.description)) {
     content.description.className = 'product-detail-description';
     info.append(content.description);
   }
