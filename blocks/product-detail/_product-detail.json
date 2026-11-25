@@ -96,21 +96,22 @@
           "valueType": "number",
           "name": "price_base",
           "label": "Preço sem cupom (R$)",
-          "description": "Ex.: 279.90. Vazio esconde o preço."
+          "description": "Obrigatório para mostrar preço. Ex.: 279.90. Sem ele, a página não mostra nenhum preço, nem o com cupom.",
+          "required": true
         },
         {
           "component": "number",
           "valueType": "number",
           "name": "price_promo",
           "label": "Preço com cupom (R$)",
-          "description": "Só para produtos participantes. Precisa ser menor que o preço sem cupom."
+          "description": "Só para produtos participantes. Preencha junto com a condição e com valor menor que o preço sem cupom."
         },
         {
           "component": "text",
           "valueType": "string",
           "name": "price_condition",
           "label": "Condição do preço com cupom",
-          "description": "Ex.: com o cupom BLACK20"
+          "description": "Obrigatória quando houver preço com cupom. Ex.: com o cupom BLACK20"
         },
         {
           "component": "richtext",
