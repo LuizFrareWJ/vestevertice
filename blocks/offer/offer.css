@@ -147,3 +147,105 @@ main .fragment-container:has(.offer) .fragment-wrapper {
   max-width: unset;
   padding: 0;
 }
+
+/* "Oferta atualizada" notice, shown in tabs that were already open */
+.offer-notice {
+  position: fixed;
+  z-index: 10;
+  inset-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+  inset-block-end: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+  max-width: 440px;
+  margin-inline: auto;
+  border: 1px solid rgb(245 242 237 / 35%);
+  border-inline-start: 6px solid var(--accent-color);
+  padding: 16px 8px 16px 16px;
+  background-color: var(--ink-color);
+  color: var(--on-ink-color);
+  box-shadow: 0 12px 32px rgb(12 12 12 / 35%);
+}
+
+.offer-notice[hidden] {
+  display: none;
+}
+
+.offer-notice .offer-notice-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.offer-notice .offer-notice-label {
+  margin: 0;
+  color: var(--accent-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.offer-notice .offer-notice-title {
+  margin: 4px 0 0;
+  font-size: var(--heading-font-size-xs);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.offer-notice .offer-notice-condition {
+  margin: 4px 0 0;
+  color: rgb(245 242 237 / 85%);
+  font-size: var(--body-font-size-xs);
+}
+
+.offer-notice .offer-notice-cta {
+  margin: 12px 0 0;
+}
+
+.offer-notice .offer-notice-cta .button {
+  min-height: 44px;
+  font-size: var(--body-font-size-xs);
+}
+
+.offer-notice .offer-notice-close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  color: var(--on-ink-color);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.offer-notice .offer-notice-close:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.offer-notice-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .offer-notice:not([hidden]) {
+    animation: offer-notice-in 0.3s ease-out;
+  }
+}
+
+@keyframes offer-notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
