@@ -1,4 +1,4 @@
-.cards > ul {
+main .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -7,21 +7,124 @@
   gap: 24px;
 }
 
-.cards > ul > li {
-  border: 1px solid #dadada;
+main .cards > ul > li {
+  display: flex;
+  flex-direction: column;
   background-color: var(--background-color);
 }
 
-.cards .cards-card-body {
-  margin: 16px;
+main .cards .cards-card-body {
+  padding: 16px 0 0;
 }
 
-.cards .cards-card-image {
+main .cards .cards-card-body > :first-child {
+  margin-top: 0;
+}
+
+main .cards .cards-card-image {
   line-height: 0;
+  overflow: hidden;
 }
 
-.cards > ul > li img {
+main .cards > ul > li img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+main .cards > ul > li:hover img {
+  transform: scale(1.03);
+}
+
+main .cards .cards-card-body strong {
+  font-stretch: var(--heading-font-stretch);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* products variant */
+main .cards.products > ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 12px;
+}
+
+main .cards.products > ul > li {
+  position: relative;
+}
+
+main .cards.products > ul > li img {
+  aspect-ratio: 4 / 5;
+  background-color: var(--light-color);
+}
+
+main .cards.products .cards-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+}
+
+main .cards.products .cards-card-body h3,
+main .cards.products .cards-card-body h4 {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0;
+  line-height: 1.3;
+  text-transform: none;
+}
+
+main .cards.products .cards-card-body p {
+  margin: 0;
+  font-size: var(--body-font-size-s);
+}
+
+main .cards.products .cards-card-price {
+  font-weight: 700;
+}
+
+main .cards.products .cards-card-price del {
+  margin-inline-end: 6px;
+  color: var(--muted-color);
+  font-weight: 400;
+}
+
+main .cards.products .cards-card-badge {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-start: 10px;
+  padding: 5px 8px;
+  background-color: var(--ink-color);
+  color: var(--accent-color);
+  font-size: var(--body-font-size-xxs);
+  font-weight: 700;
+  font-stretch: var(--heading-font-stretch);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+main .cards.products .cards-card-badge em {
+  font-style: normal;
+}
+
+@media (width >= 600px) {
+  main .cards.products > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 20px;
+  }
+}
+
+@media (width >= 900px) {
+  main .cards.products > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  main .cards.products .cards-card-body h3,
+  main .cards.products .cards-card-body h4,
+  main .cards.products .cards-card-body p {
+    font-size: var(--body-font-size-m);
+  }
 }

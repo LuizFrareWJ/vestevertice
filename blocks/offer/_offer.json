@@ -1,0 +1,54 @@
+{
+  "definitions": [
+    {
+      "title": "Offer",
+      "id": "offer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Offer",
+              "model": "offer"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "offer",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Text",
+          "valueType": "string",
+          "required": true,
+          "description": "Optional short line before the heading becomes the eyebrow. Heading is the offer, paragraphs below are the conditions."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "coupon",
+          "label": "Coupon code",
+          "description": "Shown with a copy button. Leave empty to hide."
+        },
+        {
+          "component": "aem-content",
+          "name": "link",
+          "label": "Call to action link"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "linkText",
+          "label": "Call to action text"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
