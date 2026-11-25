@@ -2,21 +2,40 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Flags product details authored with semantic formatting:
- * a paragraph with <del> is the price, a paragraph that is only italic is the badge.
+ * Creates text that is read by assistive technology only.
+ * @param {string} text The text to announce
+ * @returns {Element} The visually hidden span
+ */
+function srOnly(text) {
+  const span = document.createElement('span');
+  span.className = 'cards-sr-only';
+  span.textContent = text;
+  return span;
+}
+
+/**
+ * A paragraph with struck-through text is the price: the <del> is the original price,
+ * the rest is the current price. Screen readers get "De … por …".
  * @param {Element} body The card body
  */
-function decorateProduct(body) {
+function decoratePrice(body) {
   body.querySelectorAll(':scope > p').forEach((p) => {
-    if (p.querySelector('del')) {
-      p.classList.add('cards-card-price');
-      return;
-    }
-    const em = p.querySelector(':scope > em');
-    if (em && p.childElementCount === 1 && p.textContent.trim() === em.textContent.trim()) {
-      p.classList.add('cards-card-badge');
-    }
+    const del = p.querySelector('del');
+    if (!del) return;
+    p.classList.add('cards-card-price');
+    del.before(srOnly('De '));
+    del.after(srOnly(' por'));
   });
+}
+
+/**
+ * A card whose body has a single link becomes one clickable target,
+ * keeping that link as the only element in the tab order.
+ * @param {Element} li The card
+ */
+function decorateLink(li) {
+  const links = li.querySelectorAll('.cards-card-body a[href]');
+  if (links.length === 1) li.classList.add('cards-card-linked');
 }
 
 export default function decorate(block) {
@@ -32,9 +51,10 @@ export default function decorate(block) {
         div.className = 'cards-card-image';
       } else {
         div.className = 'cards-card-body';
-        if (isProducts) decorateProduct(div);
+        if (isProducts) decoratePrice(div);
       }
     });
+    decorateLink(li);
     ul.append(li);
   });
   ul.querySelectorAll('picture > img').forEach((img) => {

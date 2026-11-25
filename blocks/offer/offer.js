@@ -1,4 +1,4 @@
-const FEEDBACK_DURATION = 2500;
+const FEEDBACK_DURATION = 6000;
 
 /**
  * Marks a short paragraph placed before the first heading as the eyebrow.
@@ -15,7 +15,7 @@ function decorateEyebrow(content) {
  * Builds the coupon chip around the authored coupon cell, keeping its
  * Universal Editor instrumentation intact.
  * @param {Element} cell The authored coupon cell
- * @returns {Element} The coupon chip
+ * @returns {Element[]} The coupon chip and its visible feedback line
  */
 function buildCoupon(cell) {
   const coupon = document.createElement('div');
@@ -27,15 +27,15 @@ function buildCoupon(cell) {
 
   cell.className = 'offer-coupon-code';
 
-  const status = document.createElement('span');
-  status.className = 'offer-coupon-status';
-  status.setAttribute('role', 'status');
-
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'offer-coupon-copy';
   button.textContent = 'Copiar';
   button.setAttribute('aria-label', `Copiar cupom ${cell.textContent.trim()}`);
+
+  const status = document.createElement('p');
+  status.className = 'offer-coupon-status';
+  status.setAttribute('role', 'status');
 
   let resetTimer;
   button.addEventListener('click', async () => {
@@ -43,20 +43,23 @@ function buildCoupon(cell) {
     try {
       await navigator.clipboard.writeText(code);
       button.textContent = 'Copiado';
-      status.textContent = `Cupom ${code} copiado`;
+      status.textContent = `Cupom ${code} copiado. Cole no carrinho.`;
+      status.dataset.state = 'success';
     } catch {
       window.getSelection().selectAllChildren(cell);
-      status.textContent = 'Selecione o cupom para copiar';
+      status.textContent = `Não deu para copiar automaticamente. O cupom ${code} está selecionado: copie pelo seu aparelho.`;
+      status.dataset.state = 'error';
     }
     clearTimeout(resetTimer);
     resetTimer = setTimeout(() => {
       button.textContent = 'Copiar';
       status.textContent = '';
+      delete status.dataset.state;
     }, FEEDBACK_DURATION);
   });
 
-  coupon.append(label, cell, button, status);
-  return coupon;
+  coupon.append(label, cell, button);
+  return [coupon, status];
 }
 
 /**
@@ -82,7 +85,7 @@ export default function decorate(block) {
   actions.className = 'offer-actions';
 
   if (couponCell?.textContent.trim()) {
-    actions.append(buildCoupon(couponCell));
+    actions.append(...buildCoupon(couponCell));
   }
 
   if (cta) {

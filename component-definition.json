@@ -159,7 +159,7 @@
           }
         },
         {
-          "title": "Offer",
+          "title": "Oferta",
           "id": "offer",
           "plugins": {
             "xwalk": {

@@ -40,6 +40,19 @@
           "value": "",
           "label": "Text",
           "valueType": "string"
+        },
+        {
+          "component": "multiselect",
+          "name": "classes",
+          "label": "Estilo",
+          "valueType": "string",
+          "description": "Compacto: hero mais baixo, para a oferta aparecer na primeira tela do celular.",
+          "options": [
+            {
+              "name": "Compacto",
+              "value": "compact"
+            }
+          ]
         }
       ]
     }

@@ -1,5 +1,5 @@
 {
-  "project": "AEM XWalk Boilerplate",
-  "editUrlLabel": "AEM Editor",
+  "project": "Veste Vértice",
+  "editUrlLabel": "Editar no AEM",
   "editUrlPattern": "{{contentSourceUrl}}{{pathname}}?cmd=open"
 }
