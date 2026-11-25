@@ -138,4 +138,9 @@ main .hero.compact h1 {
   main .hero.portrait img {
     object-position: center 25%;
   }
+
+  /* compact portrait band is short: frame the lower half, where products sit */
+  main .hero.portrait.compact img {
+    object-position: center 75%;
+  }
 }
