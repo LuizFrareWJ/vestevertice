@@ -40,3 +40,15 @@ footer .footer strong {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+
+footer .footer .icon-air-logo {
+  width: 120px;
+  height: 27px;
+  margin-inline-start: 6px;
+  vertical-align: middle;
+}
+
+footer .footer .icon-air-logo img {
+  width: 100%;
+  height: 100%;
+}

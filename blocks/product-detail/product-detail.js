@@ -1,6 +1,9 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { buildPrice, findPriceCell } from './price-cell.js';
+import { buildPrice, findPriceCell, readPriceValues } from './price-cell.js';
+import {
+  CART_PATH, addItem, readCart, writeCart,
+} from '../cart/cart-store.js';
 
 function text(element) {
   return element?.textContent.trim() || '';
@@ -104,6 +107,42 @@ function buildGallery(pictures) {
 }
 
 /**
+ * "Adicionar à sacola": keeps the product with the prices this page shows and
+ * opens the demo bag. Only offered when the product has a price.
+ */
+function buildAddToBag(block, heading, values) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'product-detail-buy';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'button primary';
+  button.textContent = 'Adicionar à sacola';
+  const status = document.createElement('p');
+  status.className = 'product-detail-buy-status';
+  status.setAttribute('role', 'status');
+  button.addEventListener('click', () => {
+    const img = block.querySelector('.product-detail-slide img');
+    const product = {
+      id: window.location.pathname,
+      url: window.location.pathname,
+      name: heading.textContent.trim(),
+      image: img?.currentSrc || img?.src || '',
+      alt: img?.alt || '',
+      price: values.price,
+      promo: values.promo,
+      condition: values.condition,
+    };
+    if (writeCart(addItem(readCart(), product))) {
+      window.location.assign(CART_PATH);
+    } else {
+      status.textContent = 'Não foi possível guardar na sacola neste navegador.';
+    }
+  });
+  wrapper.append(button, status);
+  return wrapper;
+}
+
+/**
  * loads and decorates the product detail block
  * @param {Element} block The block element
  */
@@ -129,8 +168,12 @@ export default function decorate(block) {
     info.append(content.color);
   }
 
+  const values = readPriceValues(content.priceCell);
   const price = buildPrice(content.priceCell, { moveInstrumentation });
   if (price) info.append(price);
+  if (price && content.heading && values.price !== null) {
+    info.append(buildAddToBag(block, content.heading, values));
+  }
 
   if (text(content.description)) {
     content.description.className = 'product-detail-description';

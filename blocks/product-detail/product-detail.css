@@ -165,3 +165,26 @@ main .product-detail .product-detail-description > :first-child {
     top: calc(var(--nav-height) + 24px);
   }
 }
+
+main .product-detail .product-detail-buy {
+  margin-top: 20px;
+}
+
+main .product-detail .product-detail-buy .button {
+  width: 100%;
+}
+
+main .product-detail .product-detail-buy-status {
+  margin: 8px 0 0;
+  font-size: var(--body-font-size-xs);
+}
+
+main .product-detail .product-detail-buy-status:empty {
+  display: none;
+}
+
+@media (width >= 900px) {
+  main .product-detail .product-detail-buy .button {
+    width: auto;
+  }
+}

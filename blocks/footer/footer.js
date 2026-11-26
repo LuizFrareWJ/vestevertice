@@ -17,5 +17,10 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
+  // partner logo authored as :air-logo: needs a text alternative
+  footer.querySelectorAll('.icon-air-logo img').forEach((img) => {
+    img.alt = 'AI/R Agentic AI Engineering';
+  });
+
   block.append(footer);
 }
