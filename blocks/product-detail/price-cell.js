@@ -50,6 +50,16 @@ export function readPriceCell(cell) {
 }
 
 /**
+ * The resolved prices of the group, as the page shows them.
+ * @param {Element} cell The price cell
+ * @returns {{price: number|null, promo: number|null, savings: number|null, condition: string}}
+ */
+export function readPriceValues(cell) {
+  const { base, promo, condition } = readPriceCell(cell);
+  return { ...resolvePrices(text(base), text(promo)), condition: text(condition) };
+}
+
+/**
  * Renders the price block from the price cell. Missing prices render nothing.
  * @param {Element} cell The price cell
  * @param {Object} [options]

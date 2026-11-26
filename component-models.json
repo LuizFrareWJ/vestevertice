@@ -189,6 +189,36 @@
     ]
   },
   {
+    "id": "cart",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Título e mensagem de sacola vazia",
+        "valueType": "string",
+        "description": "O título aparece sempre; os parágrafos aparecem quando a sacola está vazia."
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Destino de continuar comprando"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "linkText",
+        "label": "Texto de continuar comprando"
+      },
+      {
+        "component": "aem-content",
+        "name": "offer",
+        "label": "Oferta que define o cupom válido",
+        "description": "A página-fonte da oferta. O cupom dela é o único aceito na sacola."
+      }
+    ]
+  },
+  {
     "id": "columns",
     "fields": [
       {

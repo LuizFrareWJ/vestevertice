@@ -114,6 +114,21 @@
           }
         },
         {
+          "title": "Sacola",
+          "id": "cart",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Cart",
+                  "model": "cart"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Columns",
           "id": "columns",
           "plugins": {
