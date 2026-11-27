@@ -7,50 +7,110 @@ footer {
 footer .footer > div {
   margin: auto;
   max-width: var(--max-content-width);
-  padding: 48px var(--inline-section-padding) 32px;
-}
-
-footer .footer .section + .section {
-  margin-top: 32px;
-  border-top: 1px solid rgb(245 242 237 / 20%);
-  padding-top: 24px;
+  padding: clamp(40px, 6vw, 72px) var(--inline-section-padding) 24px;
 }
 
 footer .footer p {
-  margin: 0 0 8px;
-}
-
-footer .footer li a {
-  display: inline-block;
-  padding-block: 6px;
+  margin: 0;
 }
 
 footer .footer a:any-link {
   color: var(--on-ink-color);
+  text-decoration: none;
+}
+
+/* link groups */
+footer .footer .footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 24px;
+}
+
+footer .footer .footer-group h2,
+footer .footer .footer-group h3 {
+  margin: 0 0 10px;
+  color: var(--accent-color);
+  font-size: var(--body-font-size-xxs);
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
 footer .footer ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  margin: 0 0 22px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-footer .footer strong {
+footer .footer li a:any-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: var(--body-font-size-s);
+  font-weight: 600;
+}
+
+footer .footer a:any-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent-color);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+footer .footer a:any-link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+  box-shadow: none;
+}
+
+/* store wordmark: as wide as the content, it closes the page */
+footer .footer .footer-brand {
+  container-type: inline-size;
+  margin-top: clamp(40px, 7vw, 96px);
+}
+
+footer .footer .footer-brand strong {
+  display: block;
+  font-size: 11.3cqi;
   font-weight: 800;
-  font-stretch: 125%;
-  letter-spacing: 0.06em;
+  font-stretch: 112%;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* demo credit: a quiet signature, apart from the store */
+footer .footer .footer-credit {
+  margin-top: clamp(20px, 3vw, 32px);
+  border-top: 1px solid rgb(245 242 237 / 22%);
+  padding-top: 18px;
+}
+
+footer .footer .footer-credit .default-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+}
+
+footer .footer .footer-credit p {
+  color: rgb(245 242 237 / 78%);
+}
+
+footer .footer .footer-credit p:has(.icon-air-logo) {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--on-ink-color);
 }
 
 footer .footer .icon-air-logo {
   width: 120px;
   height: 27px;
-  margin-inline-start: 6px;
-  vertical-align: middle;
 }
 
 footer .footer .icon-air-logo img {
@@ -58,30 +118,30 @@ footer .footer .icon-air-logo img {
   height: 100%;
 }
 
-footer .footer .section:first-child strong {
+/* content published before the grouped footer: wordmark, links and notes in two sections */
+footer .footer .section:not(.footer-links, .footer-brand, .footer-credit) strong {
   font-size: clamp(32px, 5.5vw, 80px);
   font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
-footer .footer p:not(:has(strong)) {
-  color: rgb(245 242 237 / 76%);
+footer .footer .footer-credit ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+  width: 100%;
 }
 
 @media (width >= 900px) {
-  footer .footer .section + .section .default-content-wrapper:has(.icon-air-logo) {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 32px;
+  footer .footer .footer-links .default-content-wrapper {
+    display: flex;
+    justify-content: flex-end;
   }
 
-  footer .footer ul {
-    grid-column: 1 / -1;
-  }
-
-  footer .footer p:has(.icon-air-logo) {
-    justify-self: end;
+  footer .footer .footer-nav {
+    grid-template-columns: repeat(2, minmax(180px, auto));
+    column-gap: clamp(48px, 8vw, 120px);
   }
 }

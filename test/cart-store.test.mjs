@@ -98,3 +98,43 @@ test('the header count is the number of units', () => {
   assert.equal(countItems([]), 0);
   assert.equal(countItems(setQty(addItem(addItem([], TENIS), JAQUETA), TENIS.id, 2)), 3);
 });
+
+test('regressão: esvaziar a sacola descarta o cupom e a próxima compra começa no preço-base', () => {
+  const storage = memoryStorage();
+  const bag = addItem([], TENIS);
+  writeCart(bag, storage);
+  writeCoupon('BLACK20', storage);
+  assert.equal(summarize(readCart(storage), readCoupon(storage), 'BLACK20').total, 22392);
+
+  writeCart(setQty(readCart(storage), TENIS.id, 0), storage);
+  assert.equal(readCoupon(storage), '', 'o código não pode sobreviver à sacola vazia');
+
+  writeCart(addItem(readCart(storage), TENIS), storage);
+  const next = summarize(readCart(storage), readCoupon(storage), 'BLACK20');
+  assert.deepEqual([next.status, next.total], ['none', 27990]);
+});
+
+test('regressão: estado legado (sacola vazia com BLACK20 guardado) não reaplica o cupom ao comprar pela PDP', () => {
+  // fixture legada: o que ficou em navegadores antes da correção
+  const legacy = memoryStorage();
+  legacy.setItem('veste-vertice-sacola', '[]');
+  legacy.setItem('veste-vertice-cupom', 'BLACK20');
+  legacy.setItem('outra-chave-do-site', 'preservada');
+
+  writeCart(addItem(readCart(legacy), TENIS), legacy);
+  assert.equal(readCoupon(legacy), '');
+  assert.equal(summarize(readCart(legacy), readCoupon(legacy), 'BLACK20').total, 27990);
+  assert.equal(legacy.getItem('outra-chave-do-site'), 'preservada');
+});
+
+test('sacola mista: remover só uma peça mantém o código guardado', () => {
+  const storage = memoryStorage();
+  const COURO = {
+    id: '/catalogo/jaqueta-de-couro', name: 'Jaqueta de Couro', price: 79990, promo: null,
+  };
+  writeCart(addItem(addItem([], TENIS), COURO), storage);
+  writeCoupon('BLACK20', storage);
+  writeCart(setQty(readCart(storage), COURO.id, 0), storage);
+  assert.equal(readCoupon(storage), 'BLACK20');
+  assert.equal(summarize(readCart(storage), readCoupon(storage), 'BLACK20').total, 22392);
+});

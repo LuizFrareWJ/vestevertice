@@ -26,7 +26,15 @@ export function readCart(storage) {
   }
 }
 
+/** @returns {number} Number of units in the bag */
+export function countItems(items) {
+  return items.reduce((sum, item) => sum + (Number.isInteger(item.qty) ? item.qty : 0), 0);
+}
+
 /**
+ * Saves the bag. A bag that ends (no units left) or a new one that starts (first
+ * unit) never carries the previous code: the next purchase starts at the base price.
+ * This also clears a code left by older versions next to an empty bag.
  * @param {Object[]} items Items to keep
  * @param {Storage} [storage]
  * @returns {boolean} true when the bag was saved
@@ -34,7 +42,9 @@ export function readCart(storage) {
 export function writeCart(items, storage) {
   try {
     const store = storage ?? window.localStorage;
+    const before = countItems(readCart(store));
     store.setItem(KEY, JSON.stringify(items));
+    if (before === 0 || countItems(items) === 0) store.removeItem(COUPON_KEY);
     if (!storage) window.dispatchEvent(new CustomEvent(CART_EVENT));
     return true;
   } catch {
@@ -84,11 +94,6 @@ export function addItem(items, product) {
       ? { ...item, qty: Math.min(item.qty + 1, MAX_QTY) } : item));
   }
   return [...items, { ...product, qty: 1 }];
-}
-
-/** @returns {number} Number of units in the bag */
-export function countItems(items) {
-  return items.reduce((sum, item) => sum + (Number.isInteger(item.qty) ? item.qty : 0), 0);
 }
 
 export function setQty(items, id, qty) {

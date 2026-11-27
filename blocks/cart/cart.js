@@ -89,6 +89,10 @@ export default async function decorate(block) {
   function render(focusKey) {
     body.replaceChildren();
     if (!items.length) {
+      // the purchase is over: its code goes with it (storage is cleared by writeCart)
+      entered = '';
+      couponStatus = 'none';
+      active = null;
       const empty = el('div', 'cart-empty');
       if (emptyMessage.length) empty.append(...emptyMessage.map((p) => p.cloneNode(true)));
       else empty.append(el('p', '', 'Sua sacola está vazia.'));
@@ -183,7 +187,11 @@ export default async function decorate(block) {
       couponStatus = 'checking';
       status.className = 'cart-status is-checking';
       status.textContent = STATUS_TEXT.checking(entered);
-      active = await activeCoupon(offerPath);
+      const code = entered;
+      const published = await activeCoupon(offerPath);
+      // a late answer never revives a code the visitor removed or a bag that ended
+      if (!items.length || entered !== code) return;
+      active = published;
       couponStatus = active === null ? 'unavailable' : summarize(items, entered, active).status;
       render('coupon');
     });
@@ -240,7 +248,10 @@ export default async function decorate(block) {
 
   // a code kept from an earlier visit is checked against the offer published now
   if (couponStatus === 'checking' && items.length) {
-    active = await activeCoupon(offerPath);
+    const code = entered;
+    const published = await activeCoupon(offerPath);
+    if (!items.length || entered !== code) return;
+    active = published;
     couponStatus = active === null ? 'unavailable' : summarize(items, entered, active).status;
     render();
   } else if (couponStatus === 'checking') {
