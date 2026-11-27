@@ -83,6 +83,8 @@ export function showOfferNotice(doc, offer, rawHref) {
     <button type="button" class="offer-notice-close" aria-label="Fechar aviso">×</button>`;
     notice.querySelector('.offer-notice-close').addEventListener('click', () => {
       notice.hidden = true;
+      // keyboard users continue from the offer itself, without moving the page
+      doc.querySelector('main .offer a[href]')?.focus({ preventScroll: true });
     });
     const status = doc.createElement('div');
     status.className = 'offer-notice-status';

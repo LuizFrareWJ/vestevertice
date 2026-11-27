@@ -1,5 +1,33 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import {
+  CART_EVENT, CART_PATH, countItems, readCart,
+} from '../cart/cart-store.js';
+
+/**
+ * Bag link with the number of units, kept current when the bag changes here or in
+ * another tab. The accessible name always says the full count.
+ * @param {Element} link The bag link
+ */
+function decorateBag(link) {
+  link.classList.add('nav-bag');
+  const label = document.createElement('span');
+  label.className = 'nav-bag-label';
+  label.textContent = link.textContent.trim() || 'Sacola';
+  const count = document.createElement('span');
+  count.className = 'nav-bag-count';
+  count.setAttribute('aria-hidden', 'true');
+  link.replaceChildren(label, count);
+  const update = () => {
+    const total = countItems(readCart());
+    count.textContent = total ? String(total) : '';
+    link.setAttribute('aria-label', total ? `Sacola, ${total} ${total === 1 ? 'peça' : 'peças'}` : 'Sacola, vazia');
+  };
+  update();
+  window.addEventListener(CART_EVENT, update);
+  window.addEventListener('storage', update);
+  window.addEventListener('pageshow', update);
+}
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -140,6 +168,30 @@ export default async function decorate(block) {
   }
 
   const navSections = nav.querySelector('.nav-sections');
+  const links = [...nav.querySelectorAll('a[href]')];
+  const isBag = (a) => a.origin === window.location.origin && a.pathname === CART_PATH;
+  const bagLink = links.find(isBag);
+  if (bagLink) {
+    decorateBag(bagLink);
+  } else {
+    let tools = nav.querySelector('.nav-tools');
+    if (!tools) {
+      tools = document.createElement('div');
+      tools.className = 'nav-tools';
+      nav.append(tools);
+    }
+    const bag = document.createElement('a');
+    bag.href = CART_PATH;
+    bag.textContent = 'Sacola';
+    decorateBag(bag);
+    tools.append(bag);
+    links.push(bag);
+  }
+  links.forEach((a) => {
+    if (a.origin === window.location.origin && a.pathname === window.location.pathname) {
+      a.setAttribute('aria-current', 'page');
+    }
+  });
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');

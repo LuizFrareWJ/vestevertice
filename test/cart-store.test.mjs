@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  addItem, setQty, summarize, readCart, writeCart,
+  addItem, setQty, summarize, readCart, writeCart, readCoupon, writeCoupon, countItems,
 } from '../blocks/cart/cart-store.js';
 
 const TENIS = {
@@ -13,7 +13,11 @@ const JAQUETA = {
 
 function memoryStorage() {
   const data = {};
-  return { getItem: (k) => data[k] ?? null, setItem: (k, v) => { data[k] = String(v); } };
+  return {
+    getItem: (k) => data[k] ?? null,
+    setItem: (k, v) => { data[k] = String(v); },
+    removeItem: (k) => { delete data[k]; },
+  };
 }
 
 test('BLACK20 on the participating sneaker: 279,90 − 55,98 = 223,92', () => {
@@ -56,4 +60,41 @@ test('storage round trip, and blocked storage never breaks', () => {
   assert.deepEqual(readCart(blocked), []);
   assert.equal(writeCart([], blocked), false);
   assert.deepEqual(readCart({ getItem: () => '{"not":"a list"}' }), []);
+});
+
+const SUETER = {
+  id: '/catalogo/sueter-chevron', name: 'Suéter Chevron', price: 25990, promo: null,
+};
+const BOTA = {
+  id: '/calcados/bota-cano-curto-areia', name: 'Bota Cano Curto Areia', price: 45990, promo: 36792,
+};
+
+test('mixed bag from the journey: 259,90 + 459,90 − 91,98 = 627,82', () => {
+  const s = summarize(addItem(addItem([], SUETER), BOTA), 'BLACK20', 'BLACK20');
+  assert.equal(s.status, 'applied');
+  assert.deepEqual([s.subtotal, s.discount, s.total], [71980, 9198, 62782]);
+  assert.deepEqual(s.lines.map((line) => line.discount), [0, 9198]);
+});
+
+test('removing the eligible piece leaves the code valid but without effect', () => {
+  const items = setQty(addItem(addItem([], SUETER), BOTA), BOTA.id, 0);
+  const s = summarize(items, 'BLACK20', 'BLACK20');
+  assert.equal(s.status, 'not-eligible');
+  assert.equal(s.total, 25990);
+});
+
+test('the kept coupon is normalized, cleared, and never breaks on blocked storage', () => {
+  const storage = memoryStorage();
+  writeCoupon(' black 20 ', storage);
+  assert.equal(readCoupon(storage), 'BLACK20');
+  writeCoupon('', storage);
+  assert.equal(readCoupon(storage), '');
+  const blocked = { getItem() { throw new Error('blocked'); }, setItem() { throw new Error('blocked'); } };
+  assert.equal(readCoupon(blocked), '');
+  assert.equal(writeCoupon('BLACK20', blocked), false);
+});
+
+test('the header count is the number of units', () => {
+  assert.equal(countItems([]), 0);
+  assert.equal(countItems(setQty(addItem(addItem([], TENIS), JAQUETA), TENIS.id, 2)), 3);
 });

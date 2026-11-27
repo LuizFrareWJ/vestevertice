@@ -103,6 +103,13 @@ function buildGallery(pictures) {
   });
 
   gallery.append(thumbs);
+
+  // other photos are fetched once the page has loaded, so switching never shows a blank frame
+  const preload = () => slides.slice(1).forEach(({ slide }) => {
+    slide.querySelector('img')?.setAttribute('loading', 'eager');
+  });
+  if (document.readyState === 'complete') setTimeout(preload, 1000);
+  else window.addEventListener('load', () => setTimeout(preload, 1000), { once: true });
   return gallery;
 }
 
@@ -115,7 +122,7 @@ function buildAddToBag(block, heading, values) {
   wrapper.className = 'product-detail-buy';
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'button primary';
+  button.className = 'button accent';
   button.textContent = 'Adicionar à sacola';
   const status = document.createElement('p');
   status.className = 'product-detail-buy-status';

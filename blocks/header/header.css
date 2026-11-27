@@ -24,9 +24,8 @@ header nav {
 
 header nav[aria-expanded='true'] {
   grid-template:
-    'hamburger brand' var(--nav-height)
-    'sections sections' 1fr
-    'tools tools' var(--nav-height) / auto 1fr;
+    'hamburger brand tools' var(--nav-height)
+    'sections sections sections' 1fr / auto minmax(0, 1fr) auto;
   overflow-y: auto;
   min-height: 100dvh;
 }
@@ -40,8 +39,8 @@ header nav[aria-expanded='true'] {
     display: flex;
     justify-content: space-between;
     gap: 0 32px;
-    max-width: 1264px;
-    padding: 0 32px;
+    max-width: calc(var(--max-content-width) + 2 * var(--inline-section-padding));
+    padding-inline: var(--inline-section-padding);
   }
 
   header nav[aria-expanded='true'] {
@@ -152,7 +151,7 @@ header .nav-brand {
   font-size: var(--heading-font-size-xs);
   font-weight: 800;
   font-stretch: 125%;
-  letter-spacing: 0.06em;
+  letter-spacing: -0.035em;
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
@@ -291,4 +290,87 @@ header nav .nav-sections ul > li > ul > li {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
+}
+
+header nav .nav-brand a:any-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+header nav .nav-bag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+header nav .nav-bag::before {
+  content: '';
+  width: 16px;
+  height: 18px;
+  background: currentcolor;
+  mask: url('../../icons/bag.svg') center / contain no-repeat;
+}
+
+header nav .nav-bag-count:not(:empty) {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  padding-inline: 5px;
+  box-sizing: border-box;
+  background-color: var(--accent-color);
+  color: var(--ink-color);
+  font-size: var(--body-font-size-xxs);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (width < 360px) {
+  header nav .nav-bag {
+    gap: 6px;
+    min-width: 44px;
+    justify-content: center;
+  }
+
+  header nav .nav-bag-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+header nav a[aria-current='page']:any-link {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+@media (width < 900px) {
+  header nav {
+    padding-inline: var(--inline-section-padding);
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li {
+    border-bottom: 1px solid var(--line-color);
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a {
+    display: block;
+    padding-block: 14px;
+    font-size: var(--heading-font-size-s);
+  }
+}
+
+@media (width >= 900px) {
+  header nav .nav-sections > div > ul {
+    justify-content: center;
+  }
 }

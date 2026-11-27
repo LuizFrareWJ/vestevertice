@@ -5,7 +5,9 @@
  */
 
 export const CART_PATH = '/sacola';
+export const CART_EVENT = 'veste-vertice:sacola';
 const KEY = 'veste-vertice-sacola';
+const COUPON_KEY = 'veste-vertice-cupom';
 const MAX_QTY = 10;
 
 /**
@@ -33,6 +35,36 @@ export function writeCart(items, storage) {
   try {
     const store = storage ?? window.localStorage;
     store.setItem(KEY, JSON.stringify(items));
+    if (!storage) window.dispatchEvent(new CustomEvent(CART_EVENT));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function normalizeCode(code) {
+  return (code || '').replace(/\s+/g, '').toUpperCase();
+}
+
+/**
+ * The code the visitor typed last. It is only a convenience: the bag checks it
+ * against the published offer again every time it is shown.
+ * @param {Storage} [storage]
+ * @returns {string}
+ */
+export function readCoupon(storage) {
+  try {
+    return normalizeCode((storage ?? window.localStorage).getItem(COUPON_KEY));
+  } catch {
+    return '';
+  }
+}
+
+export function writeCoupon(code, storage) {
+  try {
+    const store = storage ?? window.localStorage;
+    if (code) store.setItem(COUPON_KEY, normalizeCode(code));
+    else store.removeItem(COUPON_KEY);
     return true;
   } catch {
     return false;
@@ -54,13 +86,14 @@ export function addItem(items, product) {
   return [...items, { ...product, qty: 1 }];
 }
 
+/** @returns {number} Number of units in the bag */
+export function countItems(items) {
+  return items.reduce((sum, item) => sum + (Number.isInteger(item.qty) ? item.qty : 0), 0);
+}
+
 export function setQty(items, id, qty) {
   if (qty <= 0) return items.filter((item) => item.id !== id);
   return items.map((item) => (item.id === id ? { ...item, qty: Math.min(qty, MAX_QTY) } : item));
-}
-
-export function normalizeCode(code) {
-  return (code || '').replace(/\s+/g, '').toUpperCase();
 }
 
 /**

@@ -20,6 +20,11 @@ footer .footer p {
   margin: 0 0 8px;
 }
 
+footer .footer li a {
+  display: inline-block;
+  padding-block: 6px;
+}
+
 footer .footer a:any-link {
   color: var(--on-ink-color);
 }
@@ -28,7 +33,7 @@ footer .footer ul {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 24px;
-  margin: 0;
+  margin: 0 0 22px;
   padding: 0;
   list-style: none;
 }
@@ -51,4 +56,32 @@ footer .footer .icon-air-logo {
 footer .footer .icon-air-logo img {
   width: 100%;
   height: 100%;
+}
+
+footer .footer .section:first-child strong {
+  font-size: clamp(32px, 5.5vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+footer .footer p:not(:has(strong)) {
+  color: rgb(245 242 237 / 76%);
+}
+
+@media (width >= 900px) {
+  footer .footer .section + .section .default-content-wrapper:has(.icon-air-logo) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 32px;
+  }
+
+  footer .footer ul {
+    grid-column: 1 / -1;
+  }
+
+  footer .footer p:has(.icon-air-logo) {
+    justify-self: end;
+  }
 }

@@ -23,8 +23,25 @@ function decoratePrice(body) {
     const del = p.querySelector('del');
     if (!del) return;
     p.classList.add('cards-card-price');
+    // "R$ 223,92 com o cupom": the amount and its condition each stay on one line
+    const rest = [...p.childNodes].filter((node) => node !== del);
+    const match = rest.map((node) => node.textContent).join('').trim().match(/^(R\$\s?[\d.,]+)\s*(.*)$/);
+    if (match && rest.every((node) => node.nodeType === Node.TEXT_NODE)) {
+      const [, amountText, conditionText] = match;
+      rest.forEach((node) => node.remove());
+      const amount = document.createElement('span');
+      amount.className = 'cards-card-price-amount';
+      amount.textContent = amountText;
+      p.append(amount);
+      if (conditionText) {
+        const condition = document.createElement('span');
+        condition.className = 'cards-card-price-condition';
+        condition.textContent = conditionText;
+        p.append(' ', condition);
+      }
+    }
     del.before(srOnly('De '));
-    del.after(srOnly(' por'));
+    del.after(srOnly(' por '));
   });
 }
 
@@ -55,6 +72,9 @@ export default function decorate(block) {
       }
     });
     decorateLink(li);
+    if (!isProducts && li.children.length === 2 && li.querySelector('.cards-card-image')
+      && li.querySelector('.cards-card-body > :is(h2, h3):only-child a:only-child')
+      && li.classList.contains('cards-card-linked')) li.classList.add('cards-category');
     ul.append(li);
   });
   ul.querySelectorAll('picture > img').forEach((img) => {
@@ -63,4 +83,11 @@ export default function decorate(block) {
     img.closest('picture').replaceWith(optimizedPic);
   });
   block.replaceChildren(ul);
+  if (isProducts && ul.childElementCount) {
+    const count = document.createElement('p');
+    const total = ul.childElementCount;
+    count.className = 'cards-count';
+    count.textContent = total === 1 ? '1 peça' : `${total} peças`;
+    block.prepend(count);
+  }
 }

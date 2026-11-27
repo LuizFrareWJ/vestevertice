@@ -65,7 +65,7 @@ main .product-detail .product-detail-info > :first-child {
 }
 
 main .product-detail .product-detail-breadcrumb {
-  margin: 0 0 12px;
+  margin: 0 0 20px;
   font-size: var(--body-font-size-xs);
 }
 
@@ -96,6 +96,10 @@ main .product-detail .product-detail-price p {
 }
 
 main .product-detail .product-detail-price-current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
   font-size: var(--body-font-size-s);
 }
 
@@ -106,6 +110,12 @@ main .product-detail .product-detail-price-current strong {
 }
 
 main .product-detail .product-detail-price-condition {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 8px;
+  background: var(--accent-color);
+  color: var(--ink-color);
+  font-size: var(--body-font-size-xs);
   font-weight: 600;
 }
 
@@ -117,12 +127,55 @@ main .product-detail .product-detail-price-savings {
 }
 
 main .product-detail .product-detail-description {
-  margin-top: 20px;
+  margin-top: 24px;
+  border-top: 1px solid var(--line-color);
+  padding-top: 18px;
   font-size: var(--body-font-size-s);
 }
 
 main .product-detail .product-detail-description > :first-child {
   margin-top: 0;
+}
+
+/* phones: name and color, then the photo, then price, purchase and description */
+@media (width < 600px) {
+  main .product-detail {
+    gap: 0;
+  }
+
+  main .product-detail .product-detail-info {
+    display: contents;
+  }
+
+  main .product-detail .product-detail-breadcrumb {
+    order: 1;
+    margin-bottom: 12px;
+  }
+
+  main .product-detail h1 {
+    order: 2;
+  }
+
+  main .product-detail .product-detail-color {
+    order: 3;
+  }
+
+  main .product-detail .product-detail-gallery {
+    order: 4;
+    margin-top: 16px;
+  }
+
+  main .product-detail .product-detail-price {
+    order: 5;
+  }
+
+  main .product-detail .product-detail-buy {
+    order: 6;
+  }
+
+  main .product-detail .product-detail-description {
+    order: 7;
+  }
 }
 
 /* tablet and split screens: photo beside the name and price */
@@ -174,6 +227,11 @@ main .product-detail .product-detail-buy .button {
   width: 100%;
 }
 
+/* lime like the offer; the ink border keeps the button visible on the light page */
+main .product-detail .product-detail-buy .button.accent {
+  border-color: var(--ink-color);
+}
+
 main .product-detail .product-detail-buy-status {
   margin: 8px 0 0;
   font-size: var(--body-font-size-xs);
@@ -184,7 +242,12 @@ main .product-detail .product-detail-buy-status:empty {
 }
 
 @media (width >= 900px) {
+  main .product-detail .product-detail-info {
+    max-width: 520px;
+    padding-top: clamp(18px, 3vw, 44px);
+  }
+
   main .product-detail .product-detail-buy .button {
-    width: auto;
+    min-height: 54px;
   }
 }
