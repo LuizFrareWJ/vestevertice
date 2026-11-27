@@ -42,10 +42,14 @@ export default async function decorate(block) {
       section.classList.add('footer-links');
     } else if (wrapper.querySelector('.icon-air-logo')) {
       section.classList.add('footer-credit');
+      wrapper.querySelectorAll(':scope > p').forEach((p) => {
+        p.classList.add(p.querySelector('.icon-air-logo') ? 'footer-signature' : 'footer-note');
+      });
     } else if (wrapper.querySelector(':scope > p > strong:only-child')) {
       section.classList.add('footer-brand');
     }
   });
 
+  if (footer.querySelector('.footer-links')) footer.classList.add('footer-grid');
   block.append(footer);
 }
