@@ -110,6 +110,7 @@ h6 {
   letter-spacing: -0.02em;
   text-wrap: balance;
   overflow-wrap: break-word;
+  hyphens: auto;
   scroll-margin: calc(var(--nav-height) + 16px);
 }
 
